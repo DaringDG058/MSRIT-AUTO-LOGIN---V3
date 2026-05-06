@@ -5,25 +5,26 @@ function simulateInput(element, value) {
     element.dispatchEvent(new Event('change', { bubbles: true }));
 }
 
-// Upgraded extraction: Checks text labels first, falls back to progress bar attributes
+// Upgraded extraction: Handles empty brackets like [] or [ ] as zero
 function getAttendanceData() {
     let present = 0, absent = 0, stillToGo = 0;
     let found = false;
 
-    // Method 1: Check the legend texts (e.g., "Present[32]")
+    // Method 1: Check the legend texts (e.g., "Present[32]" or "Absent []")
     const presentEl = document.querySelector('.cn-attend');
     const absentEl = document.querySelector('.cn-absent');
     const stillEl = document.querySelector('.cn-still');
 
     if (presentEl && absentEl && stillEl) {
-        const pMatch = presentEl.innerText.match(/\[(\d+)\]/);
-        const aMatch = absentEl.innerText.match(/\[(\d+)\]/);
-        const sMatch = stillEl.innerText.match(/\[(\d+)\]/);
+        // \s* allows for spaces, \d* allows for empty numbers
+        const pMatch = presentEl.innerText.match(/\[\s*(\d*)\s*\]/);
+        const aMatch = absentEl.innerText.match(/\[\s*(\d*)\s*\]/);
+        const sMatch = stillEl.innerText.match(/\[\s*(\d*)\s*\]/);
 
         if (pMatch && aMatch && sMatch) {
-            present = parseInt(pMatch[1], 10);
-            absent = parseInt(aMatch[1], 10);
-            stillToGo = parseInt(sMatch[1], 10);
+            present = pMatch[1] === "" ? 0 : parseInt(pMatch[1], 10);
+            absent = aMatch[1] === "" ? 0 : parseInt(aMatch[1], 10);
+            stillToGo = sMatch[1] === "" ? 0 : parseInt(sMatch[1], 10);
             found = true;
         }
     }
@@ -35,14 +36,14 @@ function getAttendanceData() {
         const sBar = document.querySelector('.sc-progress-bar.md-bg-grey-400');
 
         if (pBar && aBar && sBar) {
-            const pMatch = pBar.getAttribute('title')?.match(/Present:(\d+)/i);
-            const aMatch = aBar.getAttribute('title')?.match(/Absent:(\d+)/i);
-            const sMatch = sBar.getAttribute('title')?.match(/Still to go:(\d+)/i);
+            const pMatch = pBar.getAttribute('title')?.match(/Present:\s*(\d*)/i);
+            const aMatch = aBar.getAttribute('title')?.match(/Absent:\s*(\d*)/i);
+            const sMatch = sBar.getAttribute('title')?.match(/Still to go:\s*(\d*)/i);
 
             if (pMatch && aMatch && sMatch) {
-                present = parseInt(pMatch[1], 10);
-                absent = parseInt(aMatch[1], 10);
-                stillToGo = parseInt(sMatch[1], 10);
+                present = pMatch[1] === "" ? 0 : parseInt(pMatch[1], 10);
+                absent = aMatch[1] === "" ? 0 : parseInt(aMatch[1], 10);
+                stillToGo = sMatch[1] === "" ? 0 : parseInt(sMatch[1], 10);
                 found = true;
             }
         }
@@ -93,7 +94,6 @@ function runMSRITLogic(data) {
         });
     }
 
-    // REMOVED explicit URL check. We now dynamically check if the DOM contains the stats.
     const stats = getAttendanceData();
     
     if (stats) {
