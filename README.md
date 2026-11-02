@@ -1,4 +1,4 @@
-# MSRIT-AUTO-LOGIN---V2
+# MSRIT-AUTO-LOGIN---V3
 A useful Chrome extension designed to upgrade the student portal experience of MSRIT.
 It works with Chromium based Browsers such as Microsoft Edge, Brave, Vivaldi, Opera, and Chrome.
 Doesn't work with Mozilla Firefox, Safari or Tor.
