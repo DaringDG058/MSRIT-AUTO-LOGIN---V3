@@ -3,7 +3,7 @@
   "name": "MSRIT Portal Pro",
   "version": "2.3",
   "permissions": ["storage", "activeTab"],
-  "description": "Automatically fills USN and DOB for the MSRIT portal and shows the Number of classes you can safely bunk for 75% or 85% Attendance - Made By Dushyanth Gowda",
+  "description": "Automatically fills USN, DOB and Parent's phone Number for the MSRIT portal and shows the Number of classes you can safely bunk for 75% or 85% Attendance - Made By Dushyanth Gowda",
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
