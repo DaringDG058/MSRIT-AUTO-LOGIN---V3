@@ -5,9 +5,9 @@ Doesn't work with Mozilla Firefox, Safari or Tor.
 
 🌟 Key Features
 
-🚀 Instant Auto-Login: Securely saves your USN and Date of Birth locally to automatically log you in every time you visit the portal. 
+🚀 Instant Auto-Login: Securely saves your USN, Date of Birth and Parent's Phone Number locally to automatically log you in every time you visit the portal. 
 
-📉 Smart Bunk Manager: Takes the guesswork out of skipping class! It dynamically reads your "Present", "Absent", and "Still to go" stats to calculate exactly how many classes you can afford to miss while maintaining safe attendance thresholds (85% and 75%). 
+📉 Smart Bunk Manager: Takes the guesswork out of skipping class! It dynamically reads your "Present", "Absent", and "Still to go" stats to calculate the percentage and exactly how many classes you can afford to miss while maintaining safe attendance thresholds (85% and 75%). 
 
 🎨 Seamless UI Integration: Injects a clean, natively styled "Bunk Manager" dashboard directly into the course attendance page that updates automatically as you switch between subjects. 
 
