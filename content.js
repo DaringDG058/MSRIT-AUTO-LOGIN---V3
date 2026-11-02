@@ -80,6 +80,28 @@ function runMSRITLogic(data) {
         loginBtn.click();
     }
 
+    // Step 2: Parent Mobile / ABC ID Verification
+    const idTypeSelect = document.getElementById('id-type-select');
+    const digitInputs = document.querySelectorAll('.digit-input');
+    const submitBtn = document.getElementById('btn-submit');
+
+    if (idTypeSelect && digitInputs.length === 4 && submitBtn && idTypeSelect.value === "" && data.idType && data.last4) {
+        simulateInput(idTypeSelect, data.idType);
+
+        const digits = data.last4.trim().split('');
+        digitInputs.forEach((input, index) => {
+            if (digits[index]) {
+                simulateInput(input, digits[index]);
+            }
+        });
+
+        const enteredIdInput = document.getElementById('enteredid');
+        if (enteredIdInput) enteredIdInput.value = data.last4.trim();
+
+        console.log("MSRIT Pro: Filling verification digits and submitting...");
+        submitBtn.click();
+    }
+
     const openModals = document.querySelectorAll('.uk-modal.uk-open');
     if (openModals.length > 0) {
         openModals.forEach(modal => {
@@ -108,6 +130,8 @@ function runMSRITLogic(data) {
             lastCalculatedSubject = currentSubject;
             
             const { present, absent, stillToGo } = stats;
+            const conducted = present + absent;
+            const attendedPercent = conducted === 0 ? "0.000000" : ((present / conducted) * 100).toFixed(6);
             const totalClasses = present + absent + stillToGo;
             const req85 = Math.ceil(0.85 * totalClasses);
             const req75 = Math.ceil(0.75 * totalClasses);
@@ -169,9 +193,14 @@ function runMSRITLogic(data) {
             
             calcBox.innerHTML = `
                 <div style="display: flex; align-items: center; margin-bottom: 10px;">
-                    <h3 style="color:#b82226; margin:0; font-weight:bold; font-size: 18px;">📉 Bunk Manager</h3>
-                </div>
-                <div style="font-size: 15px; line-height: 1.6;">
+        <h3 style="color:#b82226; margin:0; font-weight:bold; font-size: 18px; display: flex; align-items: center; gap: 10px;">
+            📉 Bunk Manager 
+            <span style="font-family: Consolas, Monaco, 'Courier New', monospace; font-style: italic; font-size: 15px; font-weight: 600; color: #000000; background: #fff0f0; padding: 2px 8px; border-radius: 5px; border: 1px solid #857979;">
+                ${attendedPercent}%
+            </span>
+        </h3>
+    </div>
+    <div style="font-size: 15px; line-height: 1.6;">
                     <div style="margin-bottom: 8px;">
                         <strong>85% Target:</strong> 
                         <span style="color: ${color85}; font-weight: 500;">${msg85}</span>
@@ -191,7 +220,7 @@ function runMSRITLogic(data) {
     }
 }
 
-chrome.storage.local.get(['usn', 'day', 'month', 'year'], (data) => {
+chrome.storage.local.get(['usn', 'day', 'month', 'year', 'idType', 'last4'], (data) => {
     if (!data.usn) {
         const banner = document.createElement('div');
         banner.style = "position:fixed;top:0;width:100%;background:#b82226;color:white;text-align:center;z-index:9999;padding:15px;font-weight:bold;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,0.3);";
